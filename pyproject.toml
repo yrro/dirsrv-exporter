@@ -1,0 +1,28 @@
+[project]
+name = "dirsrv-exporter"
+version = "0.1.0.dev"
+description = "Prometheus exporter for 389 Directory Server"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "ldap3>=2.9.1",
+    "prometheus-client>=0.21.0",
+    "systemd-python>=235",
+]
+
+[project.scripts]
+dirsrv-exporter = "dirsrv_exporter:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv]
+dev-dependencies = [
+    "mypy>=1.12.1",
+    "types-ldap3>=2.9.13.20240205",
+]
+
+[[tool.mypy.overrides]]
+module = "systemd"
+ignore_missing_imports = true
