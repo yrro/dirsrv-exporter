@@ -24,3 +24,5 @@ RUN microdnf -y install python3.12 && microdnf clean all
 COPY --from=builder /opt/app-root/venv /opt/app-root/venv
 
 ENTRYPOINT /opt/app-root/venv/bin/dirsrv-exporter
+
+USER 65535
