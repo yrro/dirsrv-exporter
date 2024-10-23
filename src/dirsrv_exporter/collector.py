@@ -589,6 +589,11 @@ class MetricFamilies:
             "Number of changes supplied to consumer and skipped",
             labels=self.labels_repl_agmt + ["replica_id"],
         )
+        self.repl_agmt_update_in_progress = GaugeMetricFamily(
+            "dirsrv_replication_agreement_update_in_progress",
+            "1 if supplier is pushing updates to consumer",
+            labels=self.labels_repl_agmt + ["replica_id"],
+        )
         self.repl_agmt_update_start = GaugeMetricFamily(
             "dirsrv_replication_agreement_update_start_timestamp",
             "When the most recent replication update started",
@@ -1033,6 +1038,10 @@ class MetricFamilies:
             self.repl_agmt_changes_skipped.add_metric(
                 labelvalues + [replica_id], float(skipped)
             )
+        self.repl_agmt_update_in_progress.add_metric(
+            labelvalues + [replica_id],
+            float(entry["nsds5replicaUpdateInProgress"].value),
+        )
         self.repl_agmt_update_start.add_metric(
             labelvalues + [replica_id],
             float(entry["nsds5replicaLastUpdateStart"].value.timestamp()),
