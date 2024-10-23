@@ -35,7 +35,7 @@ class Collector:
         if urlsplit(url).scheme == "":
             raise ValueError("Server must be specified as a URL")
         self.__server = Server(host=url, connect_timeout=1)
-        self.__connection = None
+        self.__connection: Connection | None = None
         self.__connection_user = user
         self.__connection_password = password
         self.__connection_authentication = authentication
