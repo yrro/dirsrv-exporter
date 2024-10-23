@@ -1,8 +1,8 @@
 FROM registry.access.redhat.com/ubi9/ubi-minimal AS builder
 
-RUN microdnf -y install gcc python3.12 python3.12-devel python3.12-pip systemd-devel && microdnf clean all
+RUN microdnf -y install gcc python3.12 python3.12-devel systemd-devel && microdnf clean all
 
-RUN python3.12 -m pip install uv
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/
 
 WORKDIR /opt/app-root/src
 
