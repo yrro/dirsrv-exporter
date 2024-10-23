@@ -26,3 +26,5 @@ COPY --from=builder /opt/app-root/venv /opt/app-root/venv
 ENTRYPOINT /opt/app-root/venv/bin/dirsrv-exporter
 
 USER 65535
+
+# vim: ts=8 sts=2 sw=2 et
