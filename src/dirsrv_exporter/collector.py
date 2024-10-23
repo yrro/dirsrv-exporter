@@ -1005,10 +1005,11 @@ class MetricFamilies:
         )
 
     def add_repl_agmt(self, entry: Entry) -> None:
+        labelvalues = [entry["cn"].value, entry["nsds5replicaroot"].value]
         status_json = json.loads(entry["nsds5replicalastupdatestatusjson"].value)
         for state in ["green", "amber", "red"]:
             self.repl_agmt_status.add_metric(
-                [entry["cn"].value, entry["nsds5replicaroot"].value, state],
+                labelvalues + [state],
                 1 if status_json["state"] == state else 0,
             )
 
@@ -1027,27 +1028,17 @@ class MetricFamilies:
                 # XXX counter
                 continue
             self.repl_agmt_changes_replayed.add_metric(
-                [
-                    entry["cn"].value,
-                    entry["nsds5replicaroot"].value,
-                    replica_id,
-                ],
-                float(replayed),
+                labelvalues + [replica_id], float(replayed)
             )
             self.repl_agmt_changes_skipped.add_metric(
-                [
-                    entry["cn"].value,
-                    entry["nsds5replicaroot"].value,
-                    replica_id,
-                ],
-                float(skipped),
+                labelvalues + [replica_id], float(skipped)
             )
         self.repl_agmt_update_start.add_metric(
-            [entry["cn"].value, entry["nsds5replicaroot"].value, replica_id],
+            labelvalues + [replica_id],
             float(entry["nsds5replicaLastUpdateStart"].value.timestamp()),
         )
         self.repl_agmt_update_end.add_metric(
-            [entry["cn"].value, entry["nsds5replicaroot"].value, replica_id],
+            labelvalues + [replica_id],
             float(entry["nsds5replicaLastUpdateEnd"].value.timestamp()),
         )
 
