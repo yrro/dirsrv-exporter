@@ -1,6 +1,10 @@
+ARG PYTHON_VERSION=3.12
+
 FROM registry.access.redhat.com/ubi9/ubi-minimal AS builder
 
-RUN microdnf -y install gcc python3.12 python3.12-devel systemd-devel && microdnf clean all
+ARG PYTHON_VERSION
+
+RUN microdnf -y --setopt=install_weak_deps=0 --nodocs install gcc python${PYTHON_VERSION} python${PYTHON_VERSION}-devel systemd-devel && microdnf clean all
 
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/
 
@@ -11,15 +15,17 @@ COPY pyproject.toml uv.lock README.md src .
 ENV \
   UV_COMPILE_BYTECODE=1 \
   UV_PYTHON_DOWNLOADS=never \
-  UV_PYTHON=python3.12 \
+  UV_PYTHON=python${PYTHON_VERSION} \
   UV_PROJECT_ENVIRONMENT=/opt/app-root/venv
 
-RUN uv sync --no-python-downloads --no-dev --no-editable --locked
+RUN uv sync --no-python-downloads --no-dev --no-editable --frozen
 
 
 FROM registry.access.redhat.com/ubi9/ubi-minimal
 
-RUN microdnf -y install python3.12 && microdnf clean all
+ARG PYTHON_VERSION
+
+RUN microdnf -y --setopt=install_weak_deps=0 --nodocs install python${PYTHON_VERSION} && microdnf clean all
 
 COPY --from=builder /opt/app-root/venv /opt/app-root/venv
 
