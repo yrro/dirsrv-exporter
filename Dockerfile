@@ -8,7 +8,13 @@ WORKDIR /opt/app-root/src
 
 COPY pyproject.toml uv.lock README.md src .
 
-RUN UV_PROJECT_ENVIRONMENT=/opt/app-root/venv uv sync --no-python-downloads --no-dev --no-editable --frozen
+ENV \
+  UV_COMPILE_BYTECODE=1 \
+  UV_PYTHON_DOWNLOADS=never \
+  UV_PYTHON=python3.12 \
+  UV_PROJECT_ENVIRONMENT=/opt/app-root/venv
+
+RUN uv sync --no-python-downloads --no-dev --no-editable --locked
 
 
 FROM registry.access.redhat.com/ubi9/ubi-minimal
