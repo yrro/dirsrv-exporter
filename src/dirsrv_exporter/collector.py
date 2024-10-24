@@ -1,4 +1,5 @@
 import json
+import ssl
 from datetime import datetime, UTC
 from logging import getLogger
 from typing import Iterator, Literal
@@ -9,6 +10,7 @@ from ldap3 import (
     Connection,
     SUBTREE,
     Entry,
+    Tls,
 )
 from ldap3.core.exceptions import LDAPException
 from ldap3.utils.dn import parse_dn, escape_rdn
@@ -34,7 +36,9 @@ class Collector:
     ):
         if urlsplit(url).scheme == "":
             raise ValueError("Server must be specified as a URL")
-        self.__server = Server(host=url, connect_timeout=1)
+        self.__server = Server(
+            host=url, connect_timeout=1, tls=Tls(validate=ssl.CERT_REQUIRED)
+        )
         self.__connection: Connection | None = None
         self.__connection_user = user
         self.__connection_password = password
