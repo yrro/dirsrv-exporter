@@ -55,7 +55,7 @@ jobs:
     steps:
 
     - name: Prune old images
-      uses: snok/container-retention-policy@v3
+      uses: snok/container-retention-policy@v3.0.0
       continue-on-error: true
       with:
         image-names: dirsrv-exporter
