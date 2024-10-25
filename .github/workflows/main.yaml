@@ -55,12 +55,12 @@ jobs:
     steps:
 
     - name: Prune old images
-      uses: snok/container-retention-policy@v2
+      uses: snok/container-retention-policy@v3
       continue-on-error: true
       with:
         image-names: dirsrv-exporter
-        cut-off: 1 minute ago UTC
-        keep-at-least: 5
-        account-type: personal
+        cut-off: '1m'
+        keep-n-most-recent: 5
+        account-type: user
         token: ${{ secrets.GITHUB_TOKEN }}
         token-type: github-token
