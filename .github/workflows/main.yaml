@@ -1,4 +1,4 @@
-name: build & bublish container image
+name: build & publish container image
 
 on:
 
@@ -13,9 +13,7 @@ defaults:
 jobs:
 
   main:
-
     runs-on: ubuntu-latest
-
     permissions:
       packages: write
 
@@ -36,3 +34,28 @@ jobs:
         username: _ignored_
         password: ${{ secrets.GITHUB_TOKEN }}
       if: github.event_name == 'push' && github.ref == 'refs/heads/main' # NOT a security check!
+
+  post-push:
+    needs: main
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Monitor image with Snyk
+      uses: snyk/actions/docker@master
+      continue-on-error: true
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      with:
+        command: monitor
+        image: ghcr.io/yrro/dirsrv-exporter:latest
+
+    - name: Prune old images
+      uses: snok/container-retention-policy@v2
+      continue-on-error: true
+      with:
+        image-names: dirsrv-exporter
+        cut-off: 1 minute ago UTC
+        keep-at-least: 5
+        account-type: personal
+        token: ${{ secrets.GITHUB_TOKEN }}
+        token-type: github-token
