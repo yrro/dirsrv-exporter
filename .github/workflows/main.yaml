@@ -33,11 +33,12 @@ jobs:
         tags: ghcr.io/yrro/dirsrv-exporter:latest
         username: _ignored_
         password: ${{ secrets.GITHUB_TOKEN }}
-      if: github.event_name == 'push' && github.ref == 'refs/heads/main' # NOT a security check!
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
   snyk:
     needs: main
     runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
 
     - name: Monitor image with Snyk
@@ -51,6 +52,7 @@ jobs:
   container-retention-policy:
     needs: main
     runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
 
     - name: Prune old images
