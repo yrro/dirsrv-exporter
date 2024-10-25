@@ -1,0 +1,60 @@
+name: build & bublish container image
+
+on:
+
+  pull_request:
+
+  push:
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+
+  main:
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      packages: write
+
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Build container image
+      run: buildah build --layers -t ghcr.io/yrro/dirsrv-exporter
+
+    - name: Push image
+      id: push
+      uses: redhat-actions/push-to-registry@v2
+      with:
+        tags: ghcr.io/yrro/dirsrv-exporter
+        username: _ignored_
+        password: ${{ secrets.GITHUB_TOKEN }}
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main' # NOT a security check!
+
+    - name: Monitor image with Snyk
+      uses: snyk/actions/docker@master
+      continue-on-error: true
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      with:
+        command: monitor
+        image: ghcr.io/yrro/dirsrv-exporter:latest
+      if: steps.push.outcome == 'success'
+
+    - name: Prune old images
+      uses: snok/container-retention-policy@v2
+      with:
+        image-names: dirsrv-exporter
+        cut-off: 1 minute ago UTC
+        keep-at-least: 5
+        account-type: personal
+        token: ${{ secrets.GITHUB_TOKEN }}
+        token-type: github-token
+      if: steps.push.outcome == 'success'
