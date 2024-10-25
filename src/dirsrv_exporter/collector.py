@@ -580,7 +580,7 @@ class MetricFamilies:
 
         self.repl_agmt_status = GaugeMetricFamily(
             "dirsrv_replication_agreeement_status",
-            "?",
+            "replication agreement (supplier) status; green is good",
             labels=self.labels_repl_agmt + ["state"],
         )
         self.repl_agmt_changes_replayed = CounterMetricFamily(
