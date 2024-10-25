@@ -59,6 +59,5 @@ jobs:
         image-names: dirsrv-exporter
         cut-off: '1m'
         keep-n-most-recent: 5
-        account-type: user
+        account: user
         token: ${{ secrets.GITHUB_TOKEN }}
-        token-type: github-token
