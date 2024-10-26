@@ -8,6 +8,10 @@ source = { editable = "." }
 dependencies = [
     { name = "ldap3" },
     { name = "prometheus-client" },
+]
+
+[package.optional-dependencies]
+systemd = [
     { name = "systemd-python" },
 ]
 
@@ -21,7 +25,7 @@ dev = [
 requires-dist = [
     { name = "ldap3", specifier = ">=2.9.1" },
     { name = "prometheus-client", specifier = ">=0.21.0" },
-    { name = "systemd-python", specifier = ">=235" },
+    { name = "systemd-python", marker = "extra == 'systemd'", specifier = ">=235" },
 ]
 
 [package.metadata.requires-dev]

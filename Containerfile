@@ -4,7 +4,7 @@ FROM registry.access.redhat.com/ubi9/ubi-minimal AS builder
 
 ARG PYTHON_VERSION
 
-RUN microdnf -y --setopt=install_weak_deps=0 --nodocs install gcc python${PYTHON_VERSION} python${PYTHON_VERSION}-devel systemd-devel && microdnf clean all
+RUN microdnf -y --setopt=install_weak_deps=0 --nodocs install python${PYTHON_VERSION} && microdnf clean all
 
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/
 

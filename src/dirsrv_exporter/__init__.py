@@ -6,7 +6,6 @@ import sys
 
 from prometheus_client import start_http_server
 from prometheus_client.core import REGISTRY
-from systemd import daemon, journal
 
 from .collector import Collector
 from .threading import set_name
@@ -34,6 +33,7 @@ def configure_logging():
     )
 
     if os.environ.get("389_DS_EXPORTER_LOG_HANDLER", "").lower() == "journal":
+        from systemd import journal
         handlers = [journal.JournalHandler(SYSLOG_IDENTIFIER="certmonger-exporter")]
     else:
         handlers = None
@@ -47,8 +47,14 @@ def configure_logging():
 
 
 def main2(argv):
+    try:
+        from systemd import daemon
+    except ImportError:
+        daemon = None
+
     def sigterm(signum, frame):
-        daemon.notify("STOPPING=1")
+        if daemon:
+            daemon.notify("STOPPING=1")
         server.shutdown()
 
     signal.signal(signal.SIGTERM, sigterm)
@@ -67,7 +73,8 @@ def main2(argv):
     try:
         logger.info("Listening on %r", server.socket.getsockname())
         set_name(thread, "httpd")
-        daemon.notify("READY=1")
+        if daemon:
+            daemon.notify("READY=1")
         thread.join()
     finally:
         server.server_close()

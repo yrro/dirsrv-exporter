@@ -7,11 +7,15 @@ requires-python = ">=3.9"
 dependencies = [
     "ldap3>=2.9.1",
     "prometheus-client>=0.21.0",
-    "systemd-python>=235",
 ]
 
 [project.scripts]
 dirsrv-exporter = "dirsrv_exporter:main"
+
+[project.optional-dependencies]
+systemd = [
+    "systemd-python>=235",
+]
 
 [build-system]
 requires = ["hatchling"]
