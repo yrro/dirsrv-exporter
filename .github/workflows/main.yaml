@@ -14,6 +14,8 @@ jobs:
 
   main:
     runs-on: ubuntu-latest
+    outputs:
+      digest: ${{ steps.push.outputs.digest }}
     permissions:
       packages: write
 
@@ -28,6 +30,7 @@ jobs:
       run: buildah build --layers -t ghcr.io/yrro/dirsrv-exporter
 
     - name: Push image
+      id: push
       uses: redhat-actions/push-to-registry@v2
       with:
         tags: ghcr.io/yrro/dirsrv-exporter:latest
@@ -38,7 +41,7 @@ jobs:
   snyk:
     needs: main
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: ${{ needs.main.outputs.digest }}
     steps:
 
     - name: Monitor image with Snyk
@@ -52,7 +55,7 @@ jobs:
   container-retention-policy:
     needs: main
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: ${{ needs.main.outputs.digest }}
     steps:
 
     - name: Prune old images
