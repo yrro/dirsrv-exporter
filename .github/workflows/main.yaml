@@ -18,7 +18,6 @@ jobs:
       digest: ${{ steps.push.outputs.digest }}
     permissions:
       packages: write
-
     steps:
 
     - name: Checkout
@@ -56,6 +55,8 @@ jobs:
     needs: main
     runs-on: ubuntu-latest
     if: ${{ needs.main.outputs.digest }}
+    permissions:
+      packages: write
     steps:
 
     - name: Prune old images
