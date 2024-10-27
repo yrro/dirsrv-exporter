@@ -1,4 +1,4 @@
-name: build & publish container image
+name: build, publish, monitor container image
 
 on:
 
@@ -37,7 +37,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
       if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
-  snyk:
+  monitor:
     needs: main
     runs-on: ubuntu-latest
     if: ${{ needs.main.outputs.digest }}
@@ -51,7 +51,7 @@ jobs:
         command: monitor
         image: ghcr.io/yrro/dirsrv-exporter:latest
 
-  container-retention-policy:
+  prune:
     needs: main
     runs-on: ubuntu-latest
     if: ${{ needs.main.outputs.digest }}
