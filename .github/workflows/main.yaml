@@ -14,10 +14,6 @@ jobs:
 
   main:
     runs-on: ubuntu-latest
-    outputs:
-      digest: ${{ steps.push.outputs.digest }}
-    permissions:
-      packages: write
     steps:
 
     - name: Checkout
@@ -26,44 +22,13 @@ jobs:
         fetch-depth: 0
 
     - name: Build container image
-      run: buildah build --layers -t ghcr.io/yrro/dirsrv-exporter
+      run: buildah build --layers -t quay.io/yrro/dirsrv-exporter
 
     - name: Push image
       id: push
       uses: redhat-actions/push-to-registry@v2
       with:
-        tags: ghcr.io/yrro/dirsrv-exporter:latest
-        username: _ignored_
-        password: ${{ secrets.GITHUB_TOKEN }}
+        tags: quay.io/yrro/dirsrv-exporter
+        username: ${{ secrets.QUAY_USERNAME }}
+        password: ${{ secrets.QUAY_PASSWORD }}
       if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-
-  monitor:
-    needs: main
-    runs-on: ubuntu-latest
-    if: ${{ needs.main.outputs.digest }}
-    steps:
-
-    - name: Monitor image with Snyk
-      uses: snyk/actions/docker@master
-      env:
-        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-      with:
-        command: monitor
-        image: ghcr.io/yrro/dirsrv-exporter:latest
-
-  prune:
-    needs: main
-    runs-on: ubuntu-latest
-    if: ${{ needs.main.outputs.digest }}
-    permissions:
-      packages: write
-    steps:
-
-    - name: Prune old images
-      uses: snok/container-retention-policy@v3.0.0
-      with:
-        image-names: dirsrv-exporter
-        cut-off: '1m'
-        keep-n-most-recent: 5
-        account: user
-        token: ${{ secrets.GITHUB_TOKEN }}
