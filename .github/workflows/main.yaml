@@ -28,7 +28,7 @@ jobs:
       id: push
       uses: redhat-actions/push-to-registry@v2
       with:
-        tags: quay.io/yrro/dirsrv-exporter
+        tags: quay.io/yrro/dirsrv-exporter:latest
         username: ${{ secrets.QUAY_USERNAME }}
         password: ${{ secrets.QUAY_PASSWORD }}
       if: github.event_name == 'push' && github.ref == 'refs/heads/main'
