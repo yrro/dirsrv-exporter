@@ -4,7 +4,7 @@ FROM registry.access.redhat.com/ubi9/ubi-minimal AS builder
 
 ARG PYTHON_VERSION
 
-RUN microdnf -y --setopt=install_weak_deps=0 --nodocs install python${PYTHON_VERSION} && microdnf clean all
+RUN microdnf -y --setopt=install_weak_deps=0 --nodocs upgrade && microdnf -y --setopt=install_weak_deps=0 --nodocs install python${PYTHON_VERSION} && microdnf clean all
 
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/
 
@@ -18,14 +18,14 @@ ENV \
   UV_PYTHON=python${PYTHON_VERSION} \
   UV_PROJECT_ENVIRONMENT=/opt/app-root/venv
 
-RUN uv sync --no-python-downloads --no-dev --no-editable --frozen
+RUN uv sync --no-dev --no-editable --frozen
 
 
 FROM registry.access.redhat.com/ubi9/ubi-minimal
 
 ARG PYTHON_VERSION
 
-RUN microdnf -y --setopt=install_weak_deps=0 --nodocs install python${PYTHON_VERSION} && microdnf clean all
+RUN microdnf -y --setopt=install_weak_deps=0 --nodocs upgrade && microdnf -y --setopt=install_weak_deps=0 --nodocs install python${PYTHON_VERSION} && microdnf clean all
 
 COPY --from=builder /opt/app-root/venv /opt/app-root/venv
 
