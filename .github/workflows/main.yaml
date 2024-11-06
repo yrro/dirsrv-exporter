@@ -38,6 +38,7 @@ jobs:
     - name: Build container image
       uses: redhat-actions/buildah-build@v2
       with:
+        containerfiles: Containerfile
         tags: quay.io/yrro/dirsrv-exporter:latest
         labels: |
           org.opencontainers.image.authors=Sam Morris <sam@robots.org.uk>
