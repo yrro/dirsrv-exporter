@@ -101,8 +101,14 @@ COPY --from=build1 /mnt/opt/app-root/venv /opt/app-root/venv
 
 COPY --from=build2 /mnt /
 
+ENV \
+  PYTHONUNBUFFERED=1 \
+  PYTHONFAULTHANDLER=1 \
+
 ENTRYPOINT ["/opt/app-root/venv/bin/dirsrv-exporter"]
 
 USER 65535
+
+EXPOSE 9976/tcp
 
 # vim: ts=8 sts=2 sw=2 et
