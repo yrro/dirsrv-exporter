@@ -16,16 +16,39 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
+    - name: Record build timestamp
+      id: timestamp
+      run: echo timestamp=$(date --rfc-3339=sec) >> $GITHUB_OUTPUT
+
     - name: Checkout
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
+    - name: Install uv
+      uses: astral-sh/setup-uv@v3
+
+    - name: Construct PEP 440 version identifier
+      id: pep_440
+      run: echo version=$(uvx dunamai from git) >> $GITHUB_OUTPUT
+
+    - name: Update project version identifier
+      run: uvx --from=toml-cli toml set --toml-path=pyproject.toml project.version ${{ steps.pep_440.outputs.version }}
+
     - name: Build container image
-      run: buildah build --layers -t quay.io/yrro/dirsrv-exporter
+      uses: redhat-actions/buildah-build@v2
+      with:
+        tags: quay.io/yrro/dirsrv-exporter:latest
+        labels: |
+          org.opencontainers.image.authors=Sam Morris <sam@robots.org.uk>
+          org.opencontainers.image.url=${{ github.server_url }}/${{ github.repository }}
+          org.opencontainers.image.source=${{ github.repositoryUrl }}
+          org.opencontainers.image.title=Prometheus exporter for 389 Directory Server
+          org.opencontainers.image.created=${{ steps.timestamp.outputs.timestamp }}
+          org.opencontainers.image.version=${{ steps.pep_440.outputs.version }}
+          org.opencontainers.image.revision=${{ github.sha }}
 
     - name: Push image
-      id: push
       uses: redhat-actions/push-to-registry@v2
       with:
         tags: quay.io/yrro/dirsrv-exporter:latest

@@ -1,6 +1,6 @@
 [project]
 name = "dirsrv-exporter"
-version = "0.1.0.dev"
+version = "0.dev0"
 description = "Prometheus exporter for 389 Directory Server"
 readme = "README.md"
 requires-python = ">=3.9"
