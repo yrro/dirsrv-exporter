@@ -1,4 +1,4 @@
-name: build, publish, monitor container image
+name: Build & publish container image
 
 on:
 
