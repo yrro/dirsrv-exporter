@@ -41,8 +41,6 @@ RUN chroot /mnt \
     UV_PROJECT_ENVIRONMENT=/opt/app-root/venv \
     uv sync --no-dev --no-editable --frozen
 
-RUN rm /mnt/etc/resolv.conf
-
 
 # --- Remove unwanted RPMs
 FROM build0 AS build2
