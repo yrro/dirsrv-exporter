@@ -1,11 +1,11 @@
 import faulthandler
+from importlib import metadata
 import logging
 import os
 import signal
 import sys
 
-from prometheus_client import start_http_server
-from prometheus_client.core import REGISTRY
+from prometheus_client import start_http_server, Info, REGISTRY
 
 from .collector import Collector
 from .threading import set_name
@@ -58,6 +58,9 @@ def main2(argv):
         server.shutdown()
 
     signal.signal(signal.SIGTERM, sigterm)
+
+    info = Info("dirsrv_exporter_info", "Information about dirsrv-exporter itself")
+    info.info({"version": metadata.version("dirsrv-exporter")})
 
     collector = Collector(
         url=os.environ["389_DS_EXPORTER_URL"],
