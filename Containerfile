@@ -103,7 +103,7 @@ COPY --from=build2 /mnt /
 
 ENV \
   PYTHONUNBUFFERED=1 \
-  PYTHONFAULTHANDLER=1 \
+  PYTHONFAULTHANDLER=1
 
 ENTRYPOINT ["/opt/app-root/venv/bin/dirsrv-exporter"]
 
