@@ -61,7 +61,12 @@ RUN rpm --root=/mnt --erase --allmatches --nodeps --noscripts --notriggers -vh \
   grep \
   keyutils-libs \
   krb5-libs \
+  libacl \
+  libattr \
+  libcap \
   libcom_err \
+  libgcc \
+  libsigsegv \
   libnsl2 \
   libtasn1 \
   libselinux \
