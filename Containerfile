@@ -11,13 +11,11 @@ FROM registry.access.redhat.com/ubi${RELEASEVER}/ubi AS build0
 
 ARG RELEASEVER
 
-ARG UPGRADE=0
-
 COPY --from=registry.access.redhat.com/ubi${RELEASEVER}/ubi-micro / /mnt
 
 ARG PYTHON_VERSION
 
-RUN if [[ $UPGRADE -ge 1 ]]; then dnf --installroot=/mnt --releasever=${RELEASEVER} -y --setopt=install_weak_deps=0 --nodocs upgrade; fi
+RUN dnf --installroot=/mnt --releasever=${RELEASEVER} -y --setopt=install_weak_deps=0 --nodocs upgrade
 
 RUN dnf --installroot=/mnt --releasever=${RELEASEVER} -y --setopt=install_weak_deps=0 --nodocs install python${PYTHON_VERSION}
 
