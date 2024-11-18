@@ -39,6 +39,8 @@ jobs:
       uses: redhat-actions/buildah-build@v2
       with:
         containerfiles: Containerfile
+        build-args: |
+          UBI_MICRO_TAG=9.4
         tags: quay.io/yrro/dirsrv-exporter:latest
         labels: |
           org.opencontainers.image.authors=Sam Morris <sam@robots.org.uk>

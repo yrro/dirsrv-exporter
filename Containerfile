@@ -5,13 +5,15 @@ ARG RELEASEVER=9
 
 ARG PYTHON_VERSION=3.12
 
+ARG UBI_MICRO_TAG=latest
+
 
 # --- Extract ubi-micro at /mnt and install python
 FROM registry.access.redhat.com/ubi${RELEASEVER}/ubi AS build0
 
 ARG RELEASEVER
 
-COPY --from=registry.access.redhat.com/ubi${RELEASEVER}/ubi-micro:9.4 / /mnt
+COPY --from=registry.access.redhat.com/ubi${RELEASEVER}/ubi-micro:${UBI_MICRO_TAG} / /mnt
 
 ARG PYTHON_VERSION
 
