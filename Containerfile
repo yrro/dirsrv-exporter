@@ -79,6 +79,7 @@ RUN rpm --root=/mnt --erase --allmatches --nodeps --noscripts --notriggers -vh \
   libverto \
   libxcrypt \
   openssl-fips-provider \
+  openssl-fips-provider-so \
   mpdecimal \
   mpfr \
   ncurses-base \
