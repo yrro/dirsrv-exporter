@@ -5,6 +5,7 @@ ARG RELEASEVER=9
 
 ARG PYTHON_VERSION=3.12
 
+
 # --- Extract ubi-micro at /mnt and install python
 FROM registry.access.redhat.com/ubi${RELEASEVER}/ubi AS build0
 
@@ -95,6 +96,7 @@ RUN rpm --root=/mnt --erase --allmatches --nodeps --noscripts --notriggers -vh \
 RUN rpm --root=/mnt -qa --queryformat='%{size}\t%{name}\n' | sort -n
 
 
+# -- Construct final image
 FROM scratch
 
 COPY --from=build1 /mnt/opt/app-root/venv /opt/app-root/venv
