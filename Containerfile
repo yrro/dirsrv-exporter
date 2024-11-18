@@ -11,7 +11,7 @@ FROM registry.access.redhat.com/ubi${RELEASEVER}/ubi:9.4 AS build0
 
 ARG RELEASEVER
 
-COPY --from=registry.access.redhat.com/ubi${RELEASEVER}/ubi-micro / /mnt
+COPY --from=registry.access.redhat.com/ubi${RELEASEVER}/ubi-micro:9.4 / /mnt
 
 ARG PYTHON_VERSION
 
